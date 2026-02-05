@@ -36,11 +36,70 @@ This guide explains how to integrate this GitOps repository with your Kubernetes
 
 ## Prerequisites
 
-- Kubernetes cluster with GitOps tool (Flux CD or ArgoCD)
+- Kubernetes cluster with GitOps tool (ArgoCD or Flux CD)
 - Cilium Gateway API configured (or other ingress)
 - Student router already deployed (from gitops-homelab)
 
-## Option 1: Flux CD (Recommended)
+## Option 1: ArgoCD (Recommended)
+
+### Quick Deploy
+
+This repository includes a pre-configured ArgoCD Application manifest:
+
+\`\`\`bash
+kubectl apply -f argocd/application.yaml
+\`\`\`
+
+This will:
+- Create an ArgoCD Application named `container-course-students`
+- Watch `manifests/generated/` in this repo
+- Automatically sync changes (automated sync enabled)
+- Prune removed resources
+- Self-heal if manifests drift
+
+### Verify Deployment
+
+\`\`\`bash
+# Check Application status
+kubectl get application container-course-students -n argocd
+
+# Force refresh (to pick up latest commits immediately)
+kubectl -n argocd annotate application container-course-students \
+  argocd.argoproj.io/refresh=normal --overwrite
+
+# View detailed status
+kubectl describe application container-course-students -n argocd
+\`\`\`
+
+### Integration with gitops-homelab
+
+If you manage your cluster with a gitops-homelab repo, you can use the "App of Apps" pattern:
+
+\`\`\`yaml
+# In gitops-homelab/apps/base/container-course/argocd-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: container-course-students
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ziyotek-edu/container-gitops
+    targetRevision: main
+    path: argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+\`\`\`
+
+This references the `argocd/` directory which contains the Application manifest.
+
+## Option 2: Flux CD
 
 ### 1. Create GitRepository Source
 
@@ -85,31 +144,6 @@ Flux will now:
 - Watch the `container-gitops` repo
 - Sync `manifests/generated/` to the cluster
 - Auto-deploy student containers when PRs are merged
-
-## Option 2: ArgoCD
-
-### 1. Create Application
-
-\`\`\`yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: container-course-students
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/ziyotek-edu/container-gitops
-    targetRevision: main
-    path: manifests/generated
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: container-course-week01
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-\`\`\`
 
 ## Manual Testing
 
