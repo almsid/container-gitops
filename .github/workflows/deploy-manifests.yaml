@@ -22,12 +22,13 @@ jobs:
       - name: Install yq if needed
         run: |
           if ! command -v yq &> /dev/null; then
-            echo "Installing yq..."
-            wget -qO /tmp/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-            sudo mv /tmp/yq /usr/local/bin/yq
-            sudo chmod +x /usr/local/bin/yq
+            echo "Installing yq to local bin..."
+            mkdir -p ~/bin
+            wget -qO ~/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+            chmod +x ~/bin/yq
+            echo "$HOME/bin" >> $GITHUB_PATH
           fi
-          yq --version
+          ~/bin/yq --version || yq --version
 
       - name: Generate Kubernetes manifests
         run: |
