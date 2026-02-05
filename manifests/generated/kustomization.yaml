@@ -6,4 +6,3 @@ namespace: container-course-week01
 resources:
   - namespace.yaml
   - gallery-configmap.yaml
-  - student-testuser-deployment.yaml
