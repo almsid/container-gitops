@@ -21,12 +21,6 @@ students:
   #   port: 5000
 
   # Add your submission below this line:
-  - name: "Test Student"
-    github_username: "testuser"
-    container_image: "nginx:alpine"
-    student_endpoint: "/"
-    health_endpoint: "/"
-    port: 80
 # Test trigger 1770313044
 # Final test 1770313541
 # Test with labels 1770313875
