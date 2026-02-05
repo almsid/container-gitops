@@ -1,0 +1,31 @@
+---
+# Role to allow refreshing ArgoCD Applications
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argocd-app-refresh
+  namespace: argocd
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["applications"]
+    verbs: ["get", "list", "patch"]
+    # Optionally restrict to specific application:
+    # resourceNames: ["container-course-students"]
+
+---
+# RoleBinding for GitHub Actions self-hosted runner
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: runner-argocd-refresh
+  namespace: argocd
+subjects:
+  # The ServiceAccount used by your ARC runners
+  # Adjust if your runner uses a different SA
+  - kind: ServiceAccount
+    name: homelab-runners-754b578d-listener
+    namespace: arc-systems
+roleRef:
+  kind: Role
+  name: argocd-app-refresh
+  apiGroup: rbac.authorization.k8s.io
