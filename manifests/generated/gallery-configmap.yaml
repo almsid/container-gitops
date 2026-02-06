@@ -18,6 +18,6 @@ data:
         # API endpoint that returns student data
         location /api/students {
             default_type application/json;
-            return 200 '{"students": [{"name":"Jared Gore","github_username":"jlgore"}]}';
+            return 200 '{"students": [{"name":"Mohammad Siddiqi","github_username":"almsid"}]}';
         }
     }

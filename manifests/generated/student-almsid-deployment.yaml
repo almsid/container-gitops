@@ -2,35 +2,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: student-jlgore
+  name: student-almsid
   namespace: container-course-week01
   labels:
     app: student-app
-    student: jlgore
+    student: almsid
     week: "1"
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: student-app
-      student: jlgore
+      student: almsid
   template:
     metadata:
       labels:
         app: student-app
-        student: jlgore
+        student: almsid
     spec:
       containers:
       - name: student-app
-        image: ghcr.io/jlgore/container-course-student:latest
+        image: ghcr.io/almsid/container-course-student:latest
         ports:
         - containerPort: 5000
           name: http
         env:
         - name: STUDENT_NAME
-          value: "Jared Gore"
+          value: "Mohammad Siddiqi"
         - name: GITHUB_USERNAME
-          value: "jlgore"
+          value: "almsid"
         resources:
           requests:
             memory: "64Mi"
@@ -54,14 +54,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: student-jlgore-svc
+  name: student-almsid-svc
   namespace: container-course-week01
   labels:
-    student: jlgore
+    student: almsid
 spec:
   selector:
     app: student-app
-    student: jlgore
+    student: almsid
   ports:
   - port: 80
     targetPort: 5000
