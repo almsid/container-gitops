@@ -18,11 +18,6 @@ students:
     student_endpoint: "/student"
     health_endpoint: "/health"
     port: 5000
-    # - name: "Jared Gore"
-    #   github_username: "jlgore"
-    #   container_image: "ghcr.io/jlgore/container-course-student:latest"
-    #   student_endpoint: "/student"
-    #   health_endpoint: "/health"
 
   # Add your submission below this line:
 # Test trigger 1770313044
